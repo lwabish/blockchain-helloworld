@@ -28,7 +28,7 @@ func (c *Chain) Validate() bool {
 		}
 	}
 	for k, b := range c.chain[1:] {
-		lastBlock := c.chain[k-1]
+		lastBlock := c.chain[k]
 		if b.previousHash != lastBlock.hash {
 			return false
 		}
