@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Chain struct {
 	chain []Block
 }
@@ -30,9 +32,11 @@ func (c *Chain) Validate() bool {
 	for k, b := range c.chain[1:] {
 		lastBlock := c.chain[k]
 		if b.previousHash != lastBlock.hash {
+			fmt.Println("chain broken")
 			return false
 		}
 		if b.hash != b.computeHash() {
+			fmt.Println("chain forged")
 			return false
 		}
 	}
