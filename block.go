@@ -23,6 +23,9 @@ func (b *Block) generateAnswer(diffculty int) string {
 
 func (b *Block) mine(difficulty int) string {
 	for {
+		// 每次都重算一下，确保幂等性。
+		// 如果不重算，数据被修改后，可能hash不一致
+		b.hash = b.computeHash()
 		if b.hash[:difficulty] != b.generateAnswer(difficulty) {
 			b.nonce++
 			b.hash = b.computeHash()
