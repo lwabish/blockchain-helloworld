@@ -17,6 +17,10 @@ func (c *Chain) GetLatestBlock() Block {
 	return c.chain[len(c.chain)-1]
 }
 
+func (c *Chain) AddTransaction(t Transaction) {
+	c.transactionPools = append(c.transactionPools, t)
+}
+
 // func (c *Chain) AddBlockToChain(b Block) {
 // 	b.previousHash = c.GetLatestBlock().hash
 // 	fmt.Printf("mine success: %s\n", b.mine(c.difficulty))
