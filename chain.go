@@ -3,22 +3,35 @@ package main
 import "fmt"
 
 type Chain struct {
-	chain      []Block
-	difficulty int
+	chain            []Block
+	transactionPools []Transaction
+	difficulty       int
+	minerReward      int
 }
 
 func (c *Chain) bigBang() Block {
-	return NewBlock("ancestorBlock", "")
+	return NewBlock(c.transactionPools, "")
 }
 
 func (c *Chain) GetLatestBlock() Block {
 	return c.chain[len(c.chain)-1]
 }
 
-func (c *Chain) AddBlockToChain(b Block) {
-	b.previousHash = c.GetLatestBlock().hash
-	fmt.Printf("mine success: %s\n", b.mine(c.difficulty))
+// func (c *Chain) AddBlockToChain(b Block) {
+// 	b.previousHash = c.GetLatestBlock().hash
+// 	fmt.Printf("mine success: %s\n", b.mine(c.difficulty))
+// 	c.chain = append(c.chain, b)
+// }
+
+func (c *Chain) MineTransactionPool(minerAddr string) {
+	minerRewardTransaction := NewTransaction("", minerAddr, c.minerReward)
+	c.transactionPools = append(c.transactionPools, minerRewardTransaction)
+
+	b := NewBlock(c.transactionPools, c.GetLatestBlock().hash)
+	b.mine(c.difficulty)
+
 	c.chain = append(c.chain, b)
+	c.transactionPools = []Transaction{}
 }
 
 func (c *Chain) Validate() bool {
@@ -46,8 +59,8 @@ func (c *Chain) Validate() bool {
 
 func NewChain() Chain {
 	c := Chain{
-		chain:      []Block{},
-		difficulty: 4,
+		difficulty:  4,
+		minerReward: 50,
 	}
 	c.chain = append(c.chain, c.bigBang())
 	return c
