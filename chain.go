@@ -3,7 +3,8 @@ package main
 import "fmt"
 
 type Chain struct {
-	chain []Block
+	chain      []Block
+	difficulty int
 }
 
 func (c *Chain) bigBang() Block {
@@ -16,7 +17,7 @@ func (c *Chain) GetLatestBlock() Block {
 
 func (c *Chain) AddBlockToChain(b Block) {
 	b.previousHash = c.GetLatestBlock().hash
-	b.hash = b.computeHash()
+	fmt.Printf("mine success: %s\n", b.mine(c.difficulty))
 	c.chain = append(c.chain, b)
 }
 
@@ -45,7 +46,8 @@ func (c *Chain) Validate() bool {
 
 func NewChain() Chain {
 	c := Chain{
-		chain: []Block{},
+		chain:      []Block{},
+		difficulty: 4,
 	}
 	c.chain = append(c.chain, c.bigBang())
 	return c
