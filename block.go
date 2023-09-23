@@ -2,8 +2,10 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 )
 
 const (
@@ -11,10 +13,11 @@ const (
 )
 
 type Block struct {
-	data         string
+	transactions []Transaction
 	previousHash string
 	hash         string
 	nonce        int
+	timestamp    int64
 }
 
 func (b *Block) generateAnswer(diffculty int) string {
@@ -36,15 +39,19 @@ func (b *Block) mine(difficulty int) string {
 }
 
 func (b *Block) computeHash() string {
-	sum := sha256.Sum256([]byte(b.data + b.previousHash + fmt.Sprintf("%d", b.nonce)))
+	transactionStrings, err := json.Marshal(b.transactions)
+	if err != nil {
+		panic(err)
+	}
+	sum := sha256.Sum256([]byte(string(transactionStrings) + b.previousHash + fmt.Sprintf("%d%d", b.nonce, b.timestamp)))
 	return fmt.Sprintf("%x", sum)
 }
 
-// fixme: hash seems useless
-func NewBlock(data string, hash string) Block {
+func NewBlock(transactions []Transaction, hash string) Block {
 	b := Block{
-		data:         data,
+		transactions: transactions,
 		previousHash: hash,
+		timestamp:    time.Now().Unix(),
 	}
 	b.hash = b.computeHash()
 	return b
