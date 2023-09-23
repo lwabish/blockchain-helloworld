@@ -37,7 +37,7 @@ func (c *Chain) Validate() bool {
 			return false
 		}
 		if b.hash != b.computeHash() {
-			fmt.Println("chain forged")
+			fmt.Printf("chain forged: current hash %s, recomputed hash %s", b.hash, b.computeHash())
 			return false
 		}
 	}
