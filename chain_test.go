@@ -29,7 +29,7 @@ func TestValidateChain(t *testing.T) {
 
 	c.chain[1].data = "transfer100Yuan"
 	t.Logf("validate chain after forge the block data result: %v", c.Validate())
-	c.chain[1].hash = c.chain[1].computeHash()
+	c.chain[1].mine(4)
 	t.Logf("validate chain after forge the block hash result: %v", c.Validate())
 
 }
