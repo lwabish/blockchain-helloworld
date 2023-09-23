@@ -13,6 +13,7 @@ func TestMineWithChain(t *testing.T) {
 	c.AddTransaction(NewTransaction("a2", "a3", 25))
 	c.MineTransactionPool("a4")
 	t.Log(c)
+	t.Log(c.chain[1].transactions)
 }
 
 func TestValidateChain(t *testing.T) {
